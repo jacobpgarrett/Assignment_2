@@ -72,51 +72,51 @@ class element:
         """
         k_e = np.zeros((12, 12))
         # Axial terms - extension of local x axis
-        axial_stiffness = E * A / self.L
+        axial_stiffness = self.E * self.A / self.L
         k_e[0, 0] = axial_stiffness
         k_e[0, 6] = -axial_stiffness
         k_e[6, 0] = -axial_stiffness
         k_e[6, 6] = axial_stiffness
         # Torsion terms - rotation about local x axis
-        torsional_stiffness = E * J / (2.0 * (1 + nu) * self.L)
+        torsional_stiffness = self.E * self.J / (2.0 * (1 + self.nu) * self.L)
         k_e[3, 3] = torsional_stiffness
         k_e[3, 9] = -torsional_stiffness
         k_e[9, 3] = -torsional_stiffness
         k_e[9, 9] = torsional_stiffness
         # Bending terms - bending about local z axis
-        k_e[1, 1] = E * 12.0 * Iz / self.L ** 3.0
-        k_e[1, 7] = E * -12.0 * Iz / self.L ** 3.0
-        k_e[7, 1] = E * -12.0 * Iz / self.L ** 3.0
-        k_e[7, 7] = E * 12.0 * Iz / self.L ** 3.0
-        k_e[1, 5] = E * 6.0 * Iz / self.L ** 2.0
-        k_e[5, 1] = E * 6.0 * Iz / self.L ** 2.0
-        k_e[1, 11] = E * 6.0 * Iz / self.L ** 2.0
-        k_e[11, 1] = E * 6.0 * Iz / self.L ** 2.0
-        k_e[5, 7] = E * -6.0 * Iz / self.L ** 2.0
-        k_e[7, 5] = E * -6.0 * Iz / self.L ** 2.0
-        k_e[7, 11] = E * -6.0 * Iz / self.L ** 2.0
-        k_e[11, 7] = E * -6.0 * Iz / self.L ** 2.0
-        k_e[5, 5] = E * 4.0 * Iz / self.L
-        k_e[11, 11] = E * 4.0 * Iz / self.L
-        k_e[5, 11] = E * 2.0 * Iz / self.L
-        k_e[11, 5] = E * 2.0 * Iz / self.L
+        k_e[1, 1] = self.E * 12.0 * self.Iz / self.L ** 3.0
+        k_e[1, 7] = self.E * -12.0 * self.Iz / self.L ** 3.0
+        k_e[7, 1] = self.E * -12.0 * self.Iz / self.L ** 3.0
+        k_e[7, 7] = self.E * 12.0 * self.Iz / self.L ** 3.0
+        k_e[1, 5] = self.E * 6.0 * self.Iz / self.L ** 2.0
+        k_e[5, 1] = self.E * 6.0 * self.Iz / self.L ** 2.0
+        k_e[1, 11] = self.E * 6.0 * self.Iz / self.L ** 2.0
+        k_e[11, 1] = self.E * 6.0 * self.Iz / self.L ** 2.0
+        k_e[5, 7] = self.E * -6.0 * self.Iz / self.L ** 2.0
+        k_e[7, 5] = self.E * -6.0 * self.Iz / self.L ** 2.0
+        k_e[7, 11] = self.E * -6.0 * self.Iz / self.L ** 2.0
+        k_e[11, 7] = self.E * -6.0 * self.Iz / self.L ** 2.0
+        k_e[5, 5] = self.E * 4.0 * self.Iz / self.L
+        k_e[11, 11] = self.E * 4.0 * self.Iz / self.L
+        k_e[5, 11] = self.E * 2.0 * self.Iz / self.L
+        k_e[11, 5] = self.E * 2.0 * self.Iz / self.L
         # Bending terms - bending about local y axis
-        k_e[2, 2] = E * 12.0 * Iy / self.L ** 3.0
-        k_e[2, 8] = E * -12.0 * Iy / self.L ** 3.0
-        k_e[8, 2] = E * -12.0 * Iy / self.L ** 3.0
-        k_e[8, 8] = E * 12.0 * Iy / self.L ** 3.0
-        k_e[2, 4] = E * -6.0 * Iy / self.L ** 2.0
-        k_e[4, 2] = E * -6.0 * Iy / self.L ** 2.0
-        k_e[2, 10] = E * -6.0 * Iy / self.L ** 2.0
-        k_e[10, 2] = E * -6.0 * Iy / self.L ** 2.0
-        k_e[4, 8] = E * 6.0 * Iy / self.L ** 2.0
-        k_e[8, 4] = E * 6.0 * Iy / self.L ** 2.0
-        k_e[8, 10] = E * 6.0 * Iy / self.L ** 2.0
-        k_e[10, 8] = E * 6.0 * Iy / self.L ** 2.0
-        k_e[4, 4] = E * 4.0 * Iy / self.L
-        k_e[10, 10] = E * 4.0 * Iy / self.L
-        k_e[4, 10] = E * 2.0 * Iy / self.L
-        k_e[10, 4] = E * 2.0 * Iy / self.L
+        k_e[2, 2] = self.E * 12.0 * self.Iy / self.L ** 3.0
+        k_e[2, 8] = self.E * -12.0 * self.Iy / self.L ** 3.0
+        k_e[8, 2] = self.E * -12.0 * self.Iy / self.L ** 3.0
+        k_e[8, 8] = self.E * 12.0 * self.Iy / self.L ** 3.0
+        k_e[2, 4] = self.E * -6.0 * self.Iy / self.L ** 2.0
+        k_e[4, 2] = self.E * -6.0 * self.Iy / self.L ** 2.0
+        k_e[2, 10] = self.E * -6.0 * self.Iy / self.L ** 2.0
+        k_e[10, 2] = self.E * -6.0 * self.Iy / self.L ** 2.0
+        k_e[4, 8] = self.E * 6.0 * self.Iy / self.L ** 2.0
+        k_e[8, 4] = self.E * 6.0 * self.Iy / self.L ** 2.0
+        k_e[8, 10] = self.E * 6.0 * self.Iy / self.L ** 2.0
+        k_e[10, 8] = self.E * 6.0 * self.Iy / self.L ** 2.0
+        k_e[4, 4] = self.E * 4.0 * self.Iy / self.L
+        k_e[10, 10] = self.E * 4.0 * self.Iy / self.L
+        k_e[4, 10] = self.E * 2.0 * self.Iy / self.L
+        k_e[10, 4] = self.E * 2.0 * self.Iy / self.L
         return k_e
     
     def rotation_matrix_3D(self):
@@ -139,6 +139,7 @@ class element:
         nxp = (self.z2 - self.z1) / L
         local_x = np.asarray([lxp, mxp, nxp])
 
+        v_temp = self.z_axis
         # choose a vector to orthonormalize the y axis if one is not given
         if v_temp is None:
             # if the beam is oriented vertically, switch to the global y axis
@@ -374,7 +375,7 @@ def mat_struct(nodes, element_connect, f_appl, supports):
                           element_connect[i][7], element_connect[i][8], element_connect[i][9]) for i in range(len(element_connect))]
     
     # create local stiffness matricies for each element
-    lmat_local = [elementvals[i].k_local for i in range(len(elementvals))]
+    lmat_local = [elementvals[i].k_e for i in range(len(elementvals))]
 
     # convert local stiffness matricies to global coordinates
     gamma = [elementvals[i].gamma for i in range(len(elementvals))]
