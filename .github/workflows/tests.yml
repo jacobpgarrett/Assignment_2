@@ -35,14 +35,7 @@ jobs:
         run: pip install -e .
 
       - name: Run tests with coverage
-        run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            export MPLBACKEND=Agg
-          else
-            export MPLBACKEND=Agg
-          fi
-          pytest --cov=src --cov-report=xml
-        shell: bash
+        run: pytest --cov=src --cov-report=xml
         
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
