@@ -9,7 +9,7 @@ This assignment serves as an introduction to Matrix Structural Analysis.
 [![tests](https://github.com/jacobpgarrett/Assignment_2/actions/workflows/tests.yml/badge.svg)](https://github.com/jacobpgarrett/Assignment_2/actions)
 ---
 
-This project is currently a work in progress.  Once it works, the following steps can be used to use the code.
+This project is currently a work in progress, as it repeatedly has an error due to a singular stiffness matrix.  I would greatly appreciate any suggestions for improving the code.  Once it works, the following steps can be used to execute the code.
 
 ## Setup
 To utilize this package, download the repo and then navigate to it in a terminal.  Then, begin entering the command below to load miniconda:
