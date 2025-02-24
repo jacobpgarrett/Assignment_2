@@ -16,11 +16,11 @@ def test_vector():
     # Tests to see if a vector is a unit vector
     test_vector = [0, 3, 1]
     with pytest.raises(ValueError):
-        check_unit_vector(test_vector, test_vector)
+        check_unit_vector(test_vector)
 
 def test_parallel():
     # Tests to see if two vectors are parallel
     vector1 = np.array([1, 0, 0])
-    vector2 = np.array([0, 1, 0])
+    vector2 = np.array([1, 0, 0])
     with pytest.raises(ValueError):
         check_parallel(vector1, vector2)

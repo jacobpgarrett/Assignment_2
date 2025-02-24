@@ -27,6 +27,9 @@ class element:
         self.x2 = node2.x
         self.y2 = node2.y
         self.z2 = node2.z
+
+        check_nodes(self) # Check to make sure nodes are not repeating before continuing
+
         self.E = E # Modulus of elasticity
         self.nu = nu # Poisson's Ratio
         self.A = A # Cross-sectional area
