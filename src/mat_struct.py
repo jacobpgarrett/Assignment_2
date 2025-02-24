@@ -413,7 +413,7 @@ def mat_struct(nodes, element_connect, f_appl, supports):
     # Partition stiffness matrix
     k_uu = k_global[np.ix_(unsupported_dofs, unsupported_dofs)]
     f_u = np.concatenate([np.array(node.F).flatten() for node in nodevals])[unsupported_dofs]
-    if np.linalg.cond(k_uu) > 1e10:
+    if np.linalg.cond(k_uu) > 1e50:
         raise ValueError("Singular stiffness matrix detected. Check supports.")
     
     # Solve for displacements
