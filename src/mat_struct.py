@@ -24,6 +24,7 @@ class element:
         self.x2 = node2.x
         self.y2 = node2.y
         self.z2 = node2.z
+        testnodes = self.check_nodes() # Checks to make sure nodes are not repeating
         self.E = E # Modulus of elasticity
         self.nu = nu # Poisson's Ratio
         self.A = A # Cross-sectional area
@@ -195,135 +196,142 @@ def check_parallel(vec_1: np.ndarray, vec_2: np.ndarray):
     else:
         return
 
-def local_geometric_stiffness_matrix_3D_beam(L, A, I_rho, Fx2, Mx2, My1, Mz1, My2, Mz2):
-    """
-    local element geometric stiffness matrix
-    source: p. 258 of McGuire's Matrix Structural Analysis 2nd Edition
-    Given:
-        material and geometric parameters:
-            L, A, I_rho (polar moment of inertia)
-        element forces and moments:
-            Fx2, Mx2, My1, Mz1, My2, Mz2
-    Context:
-        load vector:
-            [Fx1, Fy1, Fz1, Mx1, My1, Mz1, Fx2, Fy2, Fz2, Mx2, My2, Mz2]
-        DOF vector:
-            [u1, v1, w1, th_x1, th_y1, th_z1, u2, v2, w2, th_x2, th_y2, th_z2]
-        Equation:
-            [load vector] = [stiffness matrix] @ [DOF vector]
-    Returns:
-        12 x 12 geometric stiffness matrix k_g
-    """
-    k_g = np.zeros((12, 12))
-    # upper triangle off diagonal terms
-    k_g[0, 6] = -Fx2 / L
-    k_g[1, 3] = My1 / L
-    k_g[1, 4] = Mx2 / L
-    k_g[1, 5] = Fx2 / 10.0
-    k_g[1, 7] = -6.0 * Fx2 / (5.0 * L)
-    k_g[1, 9] = My2 / L
-    k_g[1, 10] = -Mx2 / L
-    k_g[1, 11] = Fx2 / 10.0
-    k_g[2, 3] = Mz1 / L
-    k_g[2, 4] = -Fx2 / 10.0
-    k_g[2, 5] = Mx2 / L
-    k_g[2, 8] = -6.0 * Fx2 / (5.0 * L)
-    k_g[2, 9] = Mz2 / L
-    k_g[2, 10] = -Fx2 / 10.0
-    k_g[2, 11] = -Mx2 / L
-    k_g[3, 4] = -1.0 * (2.0 * Mz1 - Mz2) / 6.0
-    k_g[3, 5] = (2.0 * My1 - My2) / 6.0
-    k_g[3, 7] = -My1 / L
-    k_g[3, 8] = -Mz1 / L
-    k_g[3, 9] = -Fx2 * I_rho / (A * L)
-    k_g[3, 10] = -1.0 * (Mz1 + Mz2) / 6.0
-    k_g[3, 11] = (My1 + My2) / 6.0
-    k_g[4, 7] = -Mx2 / L
-    k_g[4, 8] = Fx2 / 10.0
-    k_g[4, 9] = -1.0 * (Mz1 + Mz2) / 6.0
-    k_g[4, 10] = -Fx2 * L / 30.0
-    k_g[4, 11] = Mx2 / 2.0
-    k_g[5, 7] = -Fx2 / 10.0
-    k_g[5, 8] = -Mx2 / L
-    k_g[5, 9] = (My1 + My2) / 6.0
-    k_g[5, 10] = -Mx2 / 2.0
-    k_g[5, 11] = -Fx2 * L / 30.0
-    k_g[7, 9] = -My2 / L
-    k_g[7, 10] = Mx2 / L
-    k_g[7, 11] = -Fx2 / 10.0
-    k_g[8, 9] = -Mz2 / L
-    k_g[8, 10] = Fx2 / 10.0
-    k_g[8, 11] = Mx2 / L
-    k_g[9, 10] = (Mz1 - 2.0 * Mz2) / 6.0
-    k_g[9, 11] = -1.0 * (My1 - 2.0 * My2) / 6.0
-    # add in the symmetric lower triangle
-    k_g = k_g + k_g.transpose()
-    # add diagonal terms
-    k_g[0, 0] = Fx2 / L
-    k_g[1, 1] = 6.0 * Fx2 / (5.0 * L)
-    k_g[2, 2] = 6.0 * Fx2 / (5.0 * L)
-    k_g[3, 3] = Fx2 * I_rho / (A * L)
-    k_g[4, 4] = 2.0 * Fx2 * L / 15.0
-    k_g[5, 5] = 2.0 * Fx2 * L / 15.0
-    k_g[6, 6] = Fx2 / L
-    k_g[7, 7] = 6.0 * Fx2 / (5.0 * L)
-    k_g[8, 8] = 6.0 * Fx2 / (5.0 * L)
-    k_g[9, 9] = Fx2 * I_rho / (A * L)
-    k_g[10, 10] = 2.0 * Fx2 * L / 15.0
-    k_g[11, 11] = 2.0 * Fx2 * L / 15.0
-    return k_g
+# def local_geometric_stiffness_matrix_3D_beam(L, A, I_rho, Fx2, Mx2, My1, Mz1, My2, Mz2):
+#     """
+#     local element geometric stiffness matrix
+#     source: p. 258 of McGuire's Matrix Structural Analysis 2nd Edition
+#     Given:
+#         material and geometric parameters:
+#             L, A, I_rho (polar moment of inertia)
+#         element forces and moments:
+#             Fx2, Mx2, My1, Mz1, My2, Mz2
+#     Context:
+#         load vector:
+#             [Fx1, Fy1, Fz1, Mx1, My1, Mz1, Fx2, Fy2, Fz2, Mx2, My2, Mz2]
+#         DOF vector:
+#             [u1, v1, w1, th_x1, th_y1, th_z1, u2, v2, w2, th_x2, th_y2, th_z2]
+#         Equation:
+#             [load vector] = [stiffness matrix] @ [DOF vector]
+#     Returns:
+#         12 x 12 geometric stiffness matrix k_g
+#     """
+#     k_g = np.zeros((12, 12))
+#     # upper triangle off diagonal terms
+#     k_g[0, 6] = -Fx2 / L
+#     k_g[1, 3] = My1 / L
+#     k_g[1, 4] = Mx2 / L
+#     k_g[1, 5] = Fx2 / 10.0
+#     k_g[1, 7] = -6.0 * Fx2 / (5.0 * L)
+#     k_g[1, 9] = My2 / L
+#     k_g[1, 10] = -Mx2 / L
+#     k_g[1, 11] = Fx2 / 10.0
+#     k_g[2, 3] = Mz1 / L
+#     k_g[2, 4] = -Fx2 / 10.0
+#     k_g[2, 5] = Mx2 / L
+#     k_g[2, 8] = -6.0 * Fx2 / (5.0 * L)
+#     k_g[2, 9] = Mz2 / L
+#     k_g[2, 10] = -Fx2 / 10.0
+#     k_g[2, 11] = -Mx2 / L
+#     k_g[3, 4] = -1.0 * (2.0 * Mz1 - Mz2) / 6.0
+#     k_g[3, 5] = (2.0 * My1 - My2) / 6.0
+#     k_g[3, 7] = -My1 / L
+#     k_g[3, 8] = -Mz1 / L
+#     k_g[3, 9] = -Fx2 * I_rho / (A * L)
+#     k_g[3, 10] = -1.0 * (Mz1 + Mz2) / 6.0
+#     k_g[3, 11] = (My1 + My2) / 6.0
+#     k_g[4, 7] = -Mx2 / L
+#     k_g[4, 8] = Fx2 / 10.0
+#     k_g[4, 9] = -1.0 * (Mz1 + Mz2) / 6.0
+#     k_g[4, 10] = -Fx2 * L / 30.0
+#     k_g[4, 11] = Mx2 / 2.0
+#     k_g[5, 7] = -Fx2 / 10.0
+#     k_g[5, 8] = -Mx2 / L
+#     k_g[5, 9] = (My1 + My2) / 6.0
+#     k_g[5, 10] = -Mx2 / 2.0
+#     k_g[5, 11] = -Fx2 * L / 30.0
+#     k_g[7, 9] = -My2 / L
+#     k_g[7, 10] = Mx2 / L
+#     k_g[7, 11] = -Fx2 / 10.0
+#     k_g[8, 9] = -Mz2 / L
+#     k_g[8, 10] = Fx2 / 10.0
+#     k_g[8, 11] = Mx2 / L
+#     k_g[9, 10] = (Mz1 - 2.0 * Mz2) / 6.0
+#     k_g[9, 11] = -1.0 * (My1 - 2.0 * My2) / 6.0
+#     # add in the symmetric lower triangle
+#     k_g = k_g + k_g.transpose()
+#     # add diagonal terms
+#     k_g[0, 0] = Fx2 / L
+#     k_g[1, 1] = 6.0 * Fx2 / (5.0 * L)
+#     k_g[2, 2] = 6.0 * Fx2 / (5.0 * L)
+#     k_g[3, 3] = Fx2 * I_rho / (A * L)
+#     k_g[4, 4] = 2.0 * Fx2 * L / 15.0
+#     k_g[5, 5] = 2.0 * Fx2 * L / 15.0
+#     k_g[6, 6] = Fx2 / L
+#     k_g[7, 7] = 6.0 * Fx2 / (5.0 * L)
+#     k_g[8, 8] = 6.0 * Fx2 / (5.0 * L)
+#     k_g[9, 9] = Fx2 * I_rho / (A * L)
+#     k_g[10, 10] = 2.0 * Fx2 * L / 15.0
+#     k_g[11, 11] = 2.0 * Fx2 * L / 15.0
+#     return k_g
 
-def local_geometric_stiffness_matrix_3D_beam_without_interaction_terms(L, A, I_rho, Fx2):
+# def local_geometric_stiffness_matrix_3D_beam_without_interaction_terms(L, A, I_rho, Fx2):
+#     """
+#     local element geometric stiffness matrix
+#     source: p. 257 of McGuire's Matrix Structural Analysis 2nd Edition
+#     Given:
+#         material and geometric parameters:
+#             L, A, I_rho (polar moment of inertia)
+#         element forces and moments:
+#             Fx2
+#     Context:
+#         load vector:
+#             [Fx1, Fy1, Fz1, Mx1, My1, Mz1, Fx2, Fy2, Fz2, Mx2, My2, Mz2]
+#         DOF vector:
+#             [u1, v1, w1, th_x1, th_y1, th_z1, u2, v2, w2, th_x2, th_y2, th_z2]
+#         Equation:
+#             [load vector] = [stiffness matrix] @ [DOF vector]
+#     Returns:
+#         12 x 12 geometric stiffness matrix k_g
+#     """
+#     k_g = np.zeros((12, 12))
+#     # upper triangle off diagonal terms
+#     k_g[0, 6] = -Fx2 / L
+#     k_g[1, 5] = Fx2 / 10.0
+#     k_g[1, 7] = -6.0 * Fx2 / (5.0 * L)
+#     k_g[1, 11] = Fx2 / 10.0
+#     k_g[2, 4] = -Fx2 / 10.0
+#     k_g[2, 8] = -6.0 * Fx2 / (5.0 * L)
+#     k_g[2, 10] = -Fx2 / 10.0
+#     k_g[3, 9] = -Fx2 * I_rho / (A * L)
+#     k_g[4, 8] = Fx2 / 10.0
+#     k_g[4, 10] = -Fx2 * L / 30.0
+#     k_g[5, 7] = -Fx2 / 10
+#     k_g[5, 11] = -Fx2 * L / 30.0
+#     k_g[7, 11] = -Fx2 / 10.0
+#     k_g[8, 10] = Fx2 / 10.0
+#     # add in the symmetric lower triangle
+#     k_g = k_g + k_g.transpose()
+#     # add diagonal terms
+#     k_g[0, 0] = Fx2 / L
+#     k_g[1, 1] = 6.0 * Fx2 / (5.0 * L)
+#     k_g[2, 2] = 6.0 * Fx2 / (5.0 * L)
+#     k_g[3, 3] = Fx2 * I_rho / (A * L)
+#     k_g[4, 4] = 2.0 * Fx2 * L / 15.0
+#     k_g[5, 5] = 2.0 * Fx2 * L / 15.0
+#     k_g[6, 6] = Fx2 / L
+#     k_g[7, 7] = 6.0 * Fx2 / (5.0 * L)
+#     k_g[8, 8] = 6.0 * Fx2 / (5.0 * L)
+#     k_g[9, 9] = Fx2 * I_rho / (A * L)
+#     k_g[10, 10] = 2.0 * Fx2 * L / 15.0
+#     k_g[11, 11] = 2.0 * Fx2 * L / 15.0
+#     return k_g
+
+def check_singular(matrix: np.ndarray):
     """
-    local element geometric stiffness matrix
-    source: p. 257 of McGuire's Matrix Structural Analysis 2nd Edition
-    Given:
-        material and geometric parameters:
-            L, A, I_rho (polar moment of inertia)
-        element forces and moments:
-            Fx2
-    Context:
-        load vector:
-            [Fx1, Fy1, Fz1, Mx1, My1, Mz1, Fx2, Fy2, Fz2, Mx2, My2, Mz2]
-        DOF vector:
-            [u1, v1, w1, th_x1, th_y1, th_z1, u2, v2, w2, th_x2, th_y2, th_z2]
-        Equation:
-            [load vector] = [stiffness matrix] @ [DOF vector]
-    Returns:
-        12 x 12 geometric stiffness matrix k_g
+    Checks to see if a matrix is singular
     """
-    k_g = np.zeros((12, 12))
-    # upper triangle off diagonal terms
-    k_g[0, 6] = -Fx2 / L
-    k_g[1, 5] = Fx2 / 10.0
-    k_g[1, 7] = -6.0 * Fx2 / (5.0 * L)
-    k_g[1, 11] = Fx2 / 10.0
-    k_g[2, 4] = -Fx2 / 10.0
-    k_g[2, 8] = -6.0 * Fx2 / (5.0 * L)
-    k_g[2, 10] = -Fx2 / 10.0
-    k_g[3, 9] = -Fx2 * I_rho / (A * L)
-    k_g[4, 8] = Fx2 / 10.0
-    k_g[4, 10] = -Fx2 * L / 30.0
-    k_g[5, 7] = -Fx2 / 10
-    k_g[5, 11] = -Fx2 * L / 30.0
-    k_g[7, 11] = -Fx2 / 10.0
-    k_g[8, 10] = Fx2 / 10.0
-    # add in the symmetric lower triangle
-    k_g = k_g + k_g.transpose()
-    # add diagonal terms
-    k_g[0, 0] = Fx2 / L
-    k_g[1, 1] = 6.0 * Fx2 / (5.0 * L)
-    k_g[2, 2] = 6.0 * Fx2 / (5.0 * L)
-    k_g[3, 3] = Fx2 * I_rho / (A * L)
-    k_g[4, 4] = 2.0 * Fx2 * L / 15.0
-    k_g[5, 5] = 2.0 * Fx2 * L / 15.0
-    k_g[6, 6] = Fx2 / L
-    k_g[7, 7] = 6.0 * Fx2 / (5.0 * L)
-    k_g[8, 8] = 6.0 * Fx2 / (5.0 * L)
-    k_g[9, 9] = Fx2 * I_rho / (A * L)
-    k_g[10, 10] = 2.0 * Fx2 * L / 15.0
-    k_g[11, 11] = 2.0 * Fx2 * L / 15.0
-    return k_g
+    if np.linalg.cond(matrix) > 1e10:
+        raise ValueError("Singular stiffness matrix detected. Check supports.")
 
 def mat_struct(nodes, element_connect, f_appl, supports):
     '''
@@ -407,8 +415,7 @@ def mat_struct(nodes, element_connect, f_appl, supports):
     # Partition stiffness matrix
     k_uu = k_global[np.ix_(unsupported_dofs, unsupported_dofs)]
     f_u = np.concatenate([np.array(node.F).flatten() for node in nodevals])[unsupported_dofs]
-    if np.linalg.cond(k_uu) > 1e10:
-        raise ValueError("Singular stiffness matrix detected. Check supports.")
+    check_singular(k_uu)
     
     # Solve for displacements
     del_u = np.linalg.solve(k_uu, f_u)
