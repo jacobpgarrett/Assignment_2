@@ -10,11 +10,8 @@ class node:
         self.disp = np.zeros(6) if disp is None else np.array(disp)
         self.supported_dofs = []
 
-    def set_support(self, support_type):
-        if support_type == 'fixed':
-            self.supported_dofs = [0, 1, 2, 3, 4, 5]
-        elif support_type == 'pinned':
-            self.supported_dofs = [0, 1, 2]
+    def set_support(self, support):
+        self.supported_dofs = [i for i, val in enumerate(support) if val]
 
 # Establish Element Class
 class element:
@@ -27,9 +24,6 @@ class element:
         self.x2 = node2.x
         self.y2 = node2.y
         self.z2 = node2.z
-
-
-
         self.E = E # Modulus of elasticity
         self.nu = nu # Poisson's Ratio
         self.A = A # Cross-sectional area
@@ -358,16 +352,21 @@ def mat_struct(nodes, element_connect, f_appl, supports):
         (i, 3) = moment applied to node about the x axis
         (i, 4) = moment applied to node about the y axis
         (i, 5) = moment applied to node about the z axis
-    support: i x 3 geometry where i is the number of nodes in the geometry
+    support: i x 7 matrix where i is the number of nodes in the geometry
         (i, 0) = node number
-        (i, 1) = 1 if fixed support, 0 if not
-        (i, 2) = 1 if pin support, 0 if not    
+        (i, 1) = Fx DOF (1 if restricted 0 if not)
+        (i, 2) = Fy DOF (1 if restricted 0 if not)
+        (i, 3) = Fz DOF (1 if restricted 0 if not)
+        (i, 4) = Mx DOF (1 if restricted 0 if not)
+        (i, 5) = My DOF (1 if restricted 0 if not)
+        (i, 6) = Mz DOF (1 if restricted 0 if not) 
     '''
 
     # create nodes
     nodevals = [node(nodes[i][0], nodes[i][1], nodes[i][2], f_appl[i]) for i in range(len(nodes))]
-    for i in range(len(supports)):
-        nodevals[supports[i][0]].set_support('fixed' if supports[i][1] == 1 else 'pinned')
+    for support in supports:
+        node_index = support[0]
+        nodevals[node_index].set_support(support[1:])
     
     # create elements
     elementvals = [element(nodevals[element_connect[i][0]], nodevals[element_connect[i][1]], element_connect[i][2], 
@@ -396,28 +395,27 @@ def mat_struct(nodes, element_connect, f_appl, supports):
     supported_dofs = []
     unsupported_dofs = [i for i in range(len(nodevals) * 6)]
 
-    for support_node in supports:
-        node_index = support_node[0]
-        is_fixed = support_node[1]
-        is_pinned = support_node[2]
-        dof_indices = np.array([node_index * 6, node_index * 6 + 1, node_index * 6 + 2, 
-                                node_index * 6 + 3, node_index * 6 + 4, node_index * 6 + 5])
-        
-        if is_fixed:
-            supported_dofs.extend(dof_indices)
-        elif is_pinned:
-            supported_dofs.extend(dof_indices[:3])  # Pinned supports block translation
+    for support in supports:
+        node_index = support[0]
+        dof_indices = np.array([node_index * 6 + j for j in range(6)])
+        for i, is_restricted in enumerate(support[1:]):
+            if is_restricted:
+                supported_dofs.append(dof_indices[i])
 
     unsupported_dofs = [dof for dof in unsupported_dofs if dof not in supported_dofs]
 
     # Partition stiffness matrix
     k_uu = k_global[np.ix_(unsupported_dofs, unsupported_dofs)]
     f_u = np.concatenate([np.array(node.F).flatten() for node in nodevals])[unsupported_dofs]
-    if np.linalg.cond(k_uu) > 1e50:
+    if np.linalg.cond(k_uu) > 1e10:
         raise ValueError("Singular stiffness matrix detected. Check supports.")
     
     # Solve for displacements
     del_u = np.linalg.solve(k_uu, f_u)
     del_f = np.zeros(len(nodevals) * 6)
     del_f[unsupported_dofs] = del_u
-    return del_f, f_u
+
+    # Calculate forces at all nodes
+    f_all = k_global @ del_f
+
+    return del_f, f_all
