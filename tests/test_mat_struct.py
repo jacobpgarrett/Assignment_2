@@ -22,7 +22,7 @@ def test_duplicate_nodes():
     # Tests to see if there are duplicate nodes
     nodes = np.array([[0, 0, 0], [0, 0, 0]])
     with pytest.raises(ValueError):
-        element(nodes[0], nodes[1], 1, 1, 1, 11, 1, 1, 1, None)
+        element(nodes[0], nodes[1], 1, 1, 1, 1, 1, 1, 1, None)
 
 def test_singular():
     # Tests functionality of check_singular function

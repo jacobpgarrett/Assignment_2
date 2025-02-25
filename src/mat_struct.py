@@ -23,8 +23,7 @@ class element:
         self.node2 = node2 # Second node and subsequent coordinates
         self.x2 = node2.x
         self.y2 = node2.y
-        self.z2 = node2.z
-        testnodes = self.check_nodes() # Checks to make sure nodes are not repeating
+        self.z2 = node2.z    
         self.E = E # Modulus of elasticity
         self.nu = nu # Poisson's Ratio
         self.A = A # Cross-sectional area
@@ -34,19 +33,16 @@ class element:
         self.J = J 
         self.z_axis = z_axis # Local z axis
         self.L = np.sqrt((node1.x - node2.x)**2 + (node1.y - node2.y)**2 + (node1.z - node2.z)**2) # Computes length
-        self.k_e = self.local_elastic_stiffness_matrix_3D_beam() # Obtains local elastic stiffness matrix
-        # Need to implement local geometric stiffnes to add to elastic stiffness matrix
-        
+
+         # Check for duplicate nodes
+        if self.L == 0:
+            raise ValueError("Duplicate nodes detected: Nodes cannot be the same.")
+
+        # Calculates element properties
+        self.k_e = self.local_elastic_stiffness_matrix_3D_beam() # Obtains local elastic stiffness matrix    
         self.gamma = self.rotation_matrix_3D() # Rotation Matrix
         self.Gamma = self.transformation_matrix_3D() # Transformation Matrix
         self.k_global = self.Gamma.T @ self.k_e @ self.Gamma # Global Stiffness Matrix
-
-    def check_nodes(self):
-        # Checks to make sure nodes are not repeating
-        if (self.node1.x == self.node2.x and 
-            self.node1.y == self.node2.y and 
-            self.node1.z == self.node2.z):
-            raise ValueError("Nodes are the same")
     
     def local_elastic_stiffness_matrix_3D_beam(self) -> np.ndarray:
         """
