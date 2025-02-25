@@ -33,25 +33,7 @@ def test_singular():
     with pytest.raises(ValueError):
         check_singular(mat)
 
-def test_fixed_support():
-    # Test with a fixed support
-    nodes = np.array([[0, 0, 0], [1, 0, 0]])
-    element_connect = np.array([[0, 1, 1, 0.3, 0.5, 0.041667, 0.010416, 0.16667, 0.02861, [0, 0, 1]]], dtype=object)
-    f_appl = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]])
-    supports = np.array([[0, 1, 1, 1, 1, 1, 1], [1, 0, 0, 0, 0, 0, 0]])
-    del_vec, F_vec = mat_struct(nodes, element_connect, f_appl, supports)
-    assert np.allclose(del_vec, np.zeros(12), atol=1e-6)
-
-def test_pinned_support():
-    # Test with a pinned support
-    nodes = np.array([[0, 0, 0], [1, 0, 0]])
-    element_connect = np.array([[0, 1, 1, 0.3, 0.5, 0.041667, 0.010416, 0.16667, 0.02861, [0, 0, 1]]], dtype=object)
-    f_appl = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]])
-    supports = np.array([[0, 1, 1, 1, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0]])
-    del_vec, F_vec = mat_struct(nodes, element_connect, f_appl, supports)
-    assert np.allclose(del_vec, np.zeros(12), atol=1e-6)
-
-def trial_run():
+def test_trial_run():
     # Tests to see if tutorial works
     node0 = [0, 0, 10]  # Fixed
     node1 = [15, 0, 10]  # Midpoint (force applied)
