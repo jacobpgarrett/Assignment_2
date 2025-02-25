@@ -1,5 +1,5 @@
 # ME 700 Assignment 2
-This assignment serves as an introduction to Matrix Structural Analysis.
+This assignment serves as an introduction to Matrix Structural Analysis using the direct stiffness method.
 
 [![python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 ![os](https://img.shields.io/badge/os-ubuntu%20|%20macos%20|%20windows-blue.svg)
@@ -8,8 +8,6 @@ This assignment serves as an introduction to Matrix Structural Analysis.
 [![codecov](https://codecov.io/gh/jacobpgarrett/Assignment_2/graph/badge.svg?token=p5DMvJ6byO)](https://codecov.io/gh/jacobpgarrett/Assignment_2)
 [![tests](https://github.com/jacobpgarrett/Assignment_2/actions/workflows/tests.yml/badge.svg)](https://github.com/jacobpgarrett/Assignment_2/actions)
 ---
-
-This project is currently a work in progress, as it repeatedly has an error due to a singular stiffness matrix.  I would greatly appreciate any suggestions for improving the code.  Once it works, the following steps can be used to execute the code.
 
 ## Setup
 To utilize this package, download the repo and then navigate to it in a terminal.  Then, begin entering the command below to load miniconda:
