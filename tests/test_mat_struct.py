@@ -21,8 +21,11 @@ def test_parallel():
 def test_duplicate_nodes():
     # Tests to see if there are duplicate nodes
     nodes = np.array([[0, 0, 0], [0, 0, 0]])
+    node_1 = node(nodes[0][0], nodes[0][1], nodes[0][2])
+    node_2 = node(nodes[1][0], nodes[1][1], nodes[1][2])
+
     with pytest.raises(ValueError):
-        element(nodes[0], nodes[1], 1, 1, 1, 1, 1, 1, 1, None)
+        element(node_1, node_2, 1, 1, 1, 1, 1, 1, 1, None)
 
 def test_singular():
     # Tests functionality of check_singular function
