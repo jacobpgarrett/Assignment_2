@@ -1,5 +1,5 @@
 # ME 700 Assignment 2
-This assignment serves as an introduction to Matrix Structural Analysis.
+This assignment serves as an introduction to Matrix Structural Analysis using the direct stiffness method.
 
 [![python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 ![os](https://img.shields.io/badge/os-ubuntu%20|%20macos%20|%20windows-blue.svg)
@@ -9,10 +9,14 @@ This assignment serves as an introduction to Matrix Structural Analysis.
 [![tests](https://github.com/jacobpgarrett/Assignment_2/actions/workflows/tests.yml/badge.svg)](https://github.com/jacobpgarrett/Assignment_2/actions)
 ---
 
-This project is currently a work in progress, as it repeatedly has an error due to a singular stiffness matrix.  I would greatly appreciate any suggestions for improving the code.  Once it works, the following steps can be used to execute the code.
-
 ## Setup
-To utilize this package, download the repo and then navigate to it in a terminal.  Then, begin entering the command below to load miniconda:
+To utilize this package, download the repo using the following command:
+
+```bash
+git clone https://github.com/jacobpgarrett/Assignment_2
+```
+
+Then navigate to the associated directory.  Then, begin entering the command below to load miniconda:
 
 ```bash
 module load miniconda
@@ -20,12 +24,12 @@ module load miniconda
 
 Then, set up a mamba environment
 ```bash
-mamba create --name MSA python=3.12
+conda create --name MSA python=3.12
 ```
 
 And then activate said environment:
 ```bash
-mamba activate MSA
+conda activate MSA
 ```
 
 Double-check that the correct version of Python is installed
@@ -49,7 +53,7 @@ pytest -v --cov=src --cov-report term-missing
 ```
 
 ## Tutorials
-There is a tutorial for the Matriux Structural Analysis algorithm in the tutorials folder saved as a Jupyter Notebook.
+There is a pair of tutorials for the Matriux Structural Analysis algorithm in the tutorials folder saved as Jupyter Notebooks.
 
 # General Information
 ## Generative AI Use
