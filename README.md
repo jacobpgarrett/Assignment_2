@@ -53,7 +53,7 @@ pytest -v --cov=src --cov-report term-missing
 ```
 
 ## Tutorials
-There is a tutorial for the Matriux Structural Analysis algorithm in the tutorials folder saved as a Jupyter Notebook.
+There is a pair of tutorials for the Matriux Structural Analysis algorithm in the tutorials folder saved as Jupyter Notebooks.
 
 # General Information
 ## Generative AI Use
