@@ -10,7 +10,13 @@ This assignment serves as an introduction to Matrix Structural Analysis using th
 ---
 
 ## Setup
-To utilize this package, download the repo and then navigate to it in a terminal.  Then, begin entering the command below to load miniconda:
+To utilize this package, download the repo using the following command:
+
+```bash
+git clone https://github.com/jacobpgarrett/Assignment_2
+```
+
+Then navigate to the associated directory.  Then, begin entering the command below to load miniconda:
 
 ```bash
 module load miniconda
@@ -18,12 +24,12 @@ module load miniconda
 
 Then, set up a mamba environment
 ```bash
-mamba create --name MSA python=3.12
+conda create --name MSA python=3.12
 ```
 
 And then activate said environment:
 ```bash
-mamba activate MSA
+conda activate MSA
 ```
 
 Double-check that the correct version of Python is installed
