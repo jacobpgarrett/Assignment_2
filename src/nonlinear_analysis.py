@@ -89,12 +89,14 @@ def local_geometric_stiffness_matrix_3D_beam(L, A, I_rho, Fx2, Mx2, My1, Mz1, My
 
 def e_crit(k_e, k_g):
     """
-    critical load factor
-    Given:
-        element stiffness matrix k_e
-        element geometric stiffness matrix k_g
-    Returns:
-        critical load factor e
+    Function to calculate the critical load factor
+    inputs:
+        k_e = elastic stiffness matrix
+        kg = geometric stiffness matrix
+    
+    outputs:
+        lambda_crit = critical load factor
+        deformation_vector = vector of nodal displacements
     """
     # calculate the eigenvalues of the matrix
     eigenvalues, eigenvectors = eig(k_e, k_g)
@@ -111,7 +113,8 @@ def e_crit(k_e, k_g):
         raise ValueError("No positive eigenvalues found")    
     
 def shape_functions(x, L):
-    """ Computes the shape functions for a beam element at position x along length L """
+    # Computes the shape functions for a beam element at position x along length L
+    
     N1 = 1 - 3*(x/L)**2 + 2*(x/L)**3
     N2 = x - 2*(x/L)**2 + (x/L)**3
     N3 = 3*(x/L)**2 - 2*(x/L)**3
@@ -120,17 +123,23 @@ def shape_functions(x, L):
 
 def plot_structure_3D(nodes, elements, deformations, scale_factor=10, num_points=20):
     """
-    Plots the original and deformed structure in 3D using cubic shape functions for smooth visualization.
+    This function plots the original and deformed structure in 3D using cubic shape functions for smooth visualization.
     
-    :param nodes: N x 3 array of node coordinates
-    :param elements: List of element connectivity (node indices)
-    :param deformations: N x 6 array of nodal displacements [ux, uy, uz, θx, θy, θz]
-    :param scale_factor: Scaling factor for visibility
-    :param num_points: Number of points per element for smooth curves
+    inputs:
+        nodes: N x 3 array of node coordinates
+        elements: List of element connectivity (node indices)
+        deformations: N x 6 array of nodal displacements [ux, uy, uz, θx, θy, θz]
+        scale_factor: Scaling factor for visibility
+        num_points: Number of points per element for smooth curves
+
+    outputs:
+        No output, but a plot is generated
+
     """
     # Ensure deformations array has the correct shape
     deformations = np.pad(deformations, ((0, 0), (0, max(0, 6 - deformations.shape[1]))), 'constant')
     
+    # Initialize Plot
     fig = plt.figure(figsize=(8, 8))
     ax = fig.add_subplot(111, projection='3d')
 
@@ -152,6 +161,7 @@ def plot_structure_3D(nodes, elements, deformations, scale_factor=10, num_points
         u1, v1, w1, thx1, thy1, thz1 = deformations[n1] * scale_factor
         u2, v2, w2, thx2, thy2, thz2 = deformations[n2] * scale_factor
 
+        # Interpolate deformed shape using cubic shape functions
         x_vals, y_vals, z_vals = [], [], []
         for xi in np.linspace(0, L, num_points):
             N = shape_functions(xi, L)
@@ -176,6 +186,50 @@ def plot_structure_3D(nodes, elements, deformations, scale_factor=10, num_points
     plt.show()
 
 def nonlinear_analysis(nodes, element_connect, f_appl, supports):
+    '''
+    This function performs matrix structural analysis on an input geometry
+
+    inputs:
+    nodevals: i x 4 matrix where i is the number of nodes in the geometry
+        (i, 0) = index of node
+        (i, 1) = x coordinate of node
+        (i, 2) = y coordinate of node
+        (i, 3) = z coordinate of node
+    element_connect: i x 10 matrix where i is the number of elements in the geometry
+        (i, 1) = index of first node of element
+        (i, 2) = index of second node of element
+        (i, 3) = E modulus of elasticity
+        (i, 4) = nu Poisson's ratio
+        (i, 5) = A cross-sectional area
+        (i, 6) = Iz moment of inertia about the z-axis
+        (i, 7) = Iy moment of inertia about the y-axis
+        (i, 8) = J polar moment of inertia
+        (i, 9) = set z-axis of the element
+    f_appl: i x 6 matrix where i is the number of nodes in the geometry
+        (i, 0) = force applied to node in the x direction
+        (i, 1) = force applied to node in the y direction
+        (i, 2) = force applied to node in the z direction
+        (i, 3) = moment applied to node about the x axis
+        (i, 4) = moment applied to node about the y axis
+        (i, 5) = moment applied to node about the z axis
+    support: i x 7 matrix where i is the number of nodes in the geometry
+        (i, 0) = node number
+        (i, 1) = Fx DOF (1 if restricted 0 if not)
+        (i, 2) = Fy DOF (1 if restricted 0 if not)
+        (i, 3) = Fz DOF (1 if restricted 0 if not)
+        (i, 4) = Mx DOF (1 if restricted 0 if not)
+        (i, 5) = My DOF (1 if restricted 0 if not)
+        (i, 6) = Mz DOF (1 if restricted 0 if not) 
+
+    outputs:
+        del_vec: Displacement vector
+        F_vec: Force vector
+        nodevals: Vector of nodes, each defined as an element of the node class
+        elementvals: Vector of elements, each defined as an element of the element class
+
+    '''
+
+    # Calls Matrix Structural Analysis function
     del_vec, F_vec, nodevals, elementvals = mat_struct(nodes, element_connect, f_appl, supports)
 
     # Define the forces and moments at each node

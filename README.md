@@ -53,7 +53,7 @@ pytest -v --cov=src --cov-report term-missing
 ```
 
 ## Tutorials
-There is a pair of tutorials for the Matriux Structural Analysis algorithm in the tutorials folder saved as Jupyter Notebooks.
+There is a pair of tutorials for the Matriux Structural Analysis algorithm in the tutorials folder saved as Jupyter Notebooks.  These tutorials show an example implementation of the nonlinear analysis and matrix structural analysis scripts.  To view geometric stiffness matricies, critical load factors, or other parameters pertaining to nodes or elements, the user can index into the nodevals and elementvals vectors.
 
 # General Information
 ## Generative AI Use
