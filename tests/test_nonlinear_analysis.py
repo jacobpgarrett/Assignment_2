@@ -13,7 +13,7 @@ def test_e_crit_error():
         e_crit(k_e, k_g)
 
 # def test_e_crit():
-#     # Tests to see if e_crit function works
+#     # Tests to see if e_crit function works, needs to be improved
 #     k_e = [[1,0],[0,1]]
 #     k_g = [[1,0],[0,1]]
 #     assert e_crit(k_e, k_g) == 1
