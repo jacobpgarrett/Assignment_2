@@ -53,7 +53,7 @@ def test_trial_run():
     support_2 = [2, 1, 1, 1, 0, 0, 0]  # Pinned: Restraints all translation (x, y, z)
     supports = np.array([support_0, support_1, support_2])
 
-    del_vec, F_vec = mat_struct(nodes, element_connect, f_appl, supports)
+    del_vec, F_vec, nodevals, elementvals = mat_struct(nodes, element_connect, f_appl, supports)
     
     known = np.array([0.00000000e+00,  0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
                       0.00000000e+00,  0.00000000e+00,  2.84049957e-03,  1.59842256e+00,
