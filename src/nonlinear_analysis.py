@@ -238,4 +238,4 @@ def nonlinear_analysis(nodes, element_connect, f_appl, supports):
     # Call visualization function
     plot_structure_3D(np.array(nodes), element_connect, deformations)
     
-    return del_vec, F_vec
+    return del_vec, F_vec, nodevals, elementvals
