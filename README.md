@@ -1,5 +1,5 @@
 # ME 700 Assignment 2
-This assignment serves as an introduction to Matrix Structural Analysis using the direct stiffness method.
+This assignment serves as an introduction to Matrix Structural Analysis using the direct stiffness method.  It incorporates nonlinear analysis tools to perform elastic critical load analysis and plots the deformed structure of the initial geometry.  I would greatly appreciate any feedback on the functionality/ease of use and readability.
 
 [![python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 ![os](https://img.shields.io/badge/os-ubuntu%20|%20macos%20|%20windows-blue.svg)
