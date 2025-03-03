@@ -87,58 +87,6 @@ def local_geometric_stiffness_matrix_3D_beam(L, A, I_rho, Fx2, Mx2, My1, Mz1, My
     k_g[11, 11] = 2.0 * Fx2 * L / 15.0
     return k_g
 
-def local_geometric_stiffness_matrix_3D_beam_without_interaction_terms(L, A, I_rho, Fx2):
-    """
-    local element geometric stiffness matrix
-    source: p. 257 of McGuire's Matrix Structural Analysis 2nd Edition
-    Given:
-        material and geometric parameters:
-            L, A, I_rho (polar moment of inertia)
-        element forces and moments:
-            Fx2
-    Context:
-        load vector:
-            [Fx1, Fy1, Fz1, Mx1, My1, Mz1, Fx2, Fy2, Fz2, Mx2, My2, Mz2]
-        DOF vector:
-            [u1, v1, w1, th_x1, th_y1, th_z1, u2, v2, w2, th_x2, th_y2, th_z2]
-        Equation:
-            [load vector] = [stiffness matrix] @ [DOF vector]
-    Returns:
-        12 x 12 geometric stiffness matrix k_g
-    """
-    k_g = np.zeros((12, 12))
-    # upper triangle off diagonal terms
-    k_g[0, 6] = -Fx2 / L
-    k_g[1, 5] = Fx2 / 10.0
-    k_g[1, 7] = -6.0 * Fx2 / (5.0 * L)
-    k_g[1, 11] = Fx2 / 10.0
-    k_g[2, 4] = -Fx2 / 10.0
-    k_g[2, 8] = -6.0 * Fx2 / (5.0 * L)
-    k_g[2, 10] = -Fx2 / 10.0
-    k_g[3, 9] = -Fx2 * I_rho / (A * L)
-    k_g[4, 8] = Fx2 / 10.0
-    k_g[4, 10] = -Fx2 * L / 30.0
-    k_g[5, 7] = -Fx2 / 10
-    k_g[5, 11] = -Fx2 * L / 30.0
-    k_g[7, 11] = -Fx2 / 10.0
-    k_g[8, 10] = Fx2 / 10.0
-    # add in the symmetric lower triangle
-    k_g = k_g + k_g.transpose()
-    # add diagonal terms
-    k_g[0, 0] = Fx2 / L
-    k_g[1, 1] = 6.0 * Fx2 / (5.0 * L)
-    k_g[2, 2] = 6.0 * Fx2 / (5.0 * L)
-    k_g[3, 3] = Fx2 * I_rho / (A * L)
-    k_g[4, 4] = 2.0 * Fx2 * L / 15.0
-    k_g[5, 5] = 2.0 * Fx2 * L / 15.0
-    k_g[6, 6] = Fx2 / L
-    k_g[7, 7] = 6.0 * Fx2 / (5.0 * L)
-    k_g[8, 8] = 6.0 * Fx2 / (5.0 * L)
-    k_g[9, 9] = Fx2 * I_rho / (A * L)
-    k_g[10, 10] = 2.0 * Fx2 * L / 15.0
-    k_g[11, 11] = 2.0 * Fx2 * L / 15.0
-    return k_g
-
 def e_crit(k_e, k_g):
     """
     critical load factor
