@@ -53,7 +53,12 @@ pytest -v --cov=src --cov-report term-missing
 ```
 
 ## Tutorials
-There is a pair of tutorials for the Matriux Structural Analysis algorithm in the tutorials folder saved as Jupyter Notebooks.  These tutorials show an example implementation of the nonlinear analysis and matrix structural analysis scripts.  To view geometric stiffness matricies, critical load factors, or other parameters pertaining to nodes or elements, the user can index into the nodevals and elementvals vectors.
+There is a pair of tutorials for the Matriux Structural Analysis algorithm in the tutorials folder saved as Jupyter Notebooks.  These tutorials show an example implementation of the nonlinear analysis and matrix structural analysis scripts.  To view geometric stiffness matricies, critical load factors, or other parameters pertaining to nodes or elements, the user can index into the nodevals and elementvals vectors.  To do so, execute the following commands:
+
+```bash
+print(elementvals[i].k_g) # Geometric Stiffness matrix
+print(elementvals[i].lambda_crit) # Elastic Critical Load Factor
+```
 
 # General Information
 ## Generative AI Use
